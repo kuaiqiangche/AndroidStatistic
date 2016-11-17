@@ -33,5 +33,7 @@ piccolo {
     onCheckedChanged = 'com.cocoa.piccolo.piccolo.Logger.onCheckedChanged();'
     onClick = 'com.cocoa.piccolo.piccolo.Logger.log(view);'
     packageName = 'com/cocoa/piccolo/piccolo'
+    onCreate = 'com.cocoa.piccolo.piccolo.Logger.onCreate();'
+    onPause = 'com.cocoa.piccolo.piccolo.Logger.onPause();'
 
 }

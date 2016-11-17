@@ -12,18 +12,17 @@ public class Modifyer {
     static CtClass bundleClass
     static CtClass radioGroupClass
     static CtClass adapterViewClass
-    static CtClass intClass
-    static CtClass longClass
+
 
     public static void injectDir(String path, ParamsExtension paramsExtension) {
         pool.appendClassPath(path)
         pool.appendClassPath("/Users/sj/Library/Android/sdk/platforms/android-24/android.jar")
+        pool.appendClassPath(paramsExtension.sdkJarPath)
 
         viewClass = pool.getCtClass("android.view.View")
         bundleClass = pool.getCtClass("android.os.Bundle")
         radioGroupClass = pool.getCtClass("android.widget.RadioGroup")
-//        intClass = pool.getCtClass("int")
-//        longClass = pool.getCtClass("java.lang.Long")
+
 
         File dir = new File(path)
         if (dir.isDirectory()) {
@@ -52,9 +51,13 @@ public class Modifyer {
                             c.defrost()
                         }
 
-                        modfiyEvent(c, "onCheckedChanged", paramsExtension.getOnCheckedChanged())
-                        modfiyEvent(c, "onClick", paramsExtension.getOnClick())
-                        modfiyEvent(c, "onItemClick", paramsExtension.getOnItemClick())
+                        injectEvent(c, "onCheckedChanged", paramsExtension.getOnCheckedChanged())
+                        injectEvent(c, "onClick", paramsExtension.getOnClick())
+                        injectEvent(c, "onItemClick", paramsExtension.getOnItemClick())
+
+                        injectLifeCycle(c, "onCreate", paramsExtension.getOnCreate())
+                        injectLifeCycle(c, "OnPause", paramsExtension.getOnPause())
+
 
 //                        try {
 //                            CtMethod method = c.getDeclaredMethod("onClick", [viewClass] as CtClass[])
@@ -74,7 +77,7 @@ public class Modifyer {
     }
 
 
-    public static void modfiyEvent(CtClass c, String methodName, String methodInstanceStr) {
+    public static void injectEvent(CtClass c, String methodName, String methodInstanceStr) {
 
         try {
             if (methodInstanceStr == null || methodInstanceStr.length() == 0) {
@@ -100,5 +103,27 @@ public class Modifyer {
         }
     }
 
+    /**
+     *
+     * @param c
+     * @param lcName  LifeCycle Name
+     * @param lcStr   LifeCycle
+     */
+    public static void injectLifeCycle(CtClass c, String lcName, String lcStr) {
+
+        try {
+            if (lcStr == null || lcStr.length() == 0) {
+                return
+            }
+            CtMethod method;
+            if ("onCreate".equals(lcName)) {
+                method = c.getDeclaredMethod("onCreate", [bundleClass] as CtClass[])
+            }else{
+                method = c.getDeclaredMethod(lcName, null)
+            }
+        } catch (Exception e) {
+            println "piccolo modfiy method error" + e.toString()+e.getMessage()+e.localizedMessage
+        }
+    }
 
 }

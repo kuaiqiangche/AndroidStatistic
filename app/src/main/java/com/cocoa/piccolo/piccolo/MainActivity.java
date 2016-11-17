@@ -21,36 +21,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         rg.setOnCheckedChangeListener(this);
         new ListView(this).setOnItemClickListener(this);
-        try {
-            Class ccc = Integer.TYPE;
-            Log.e("=-----", Integer.TYPE+ "-----");
-            Log.e("=--ccc---", ccc.getName()+ "-----");
-
-        } catch (Exception e) {
-            Log.e("=-----", e.toString() + "-----");
-
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

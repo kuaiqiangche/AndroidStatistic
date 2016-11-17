@@ -18,14 +18,13 @@ public class PluginImpl implements Plugin<Project> {
         def android = project.extensions.findByType(AppExtension)
 
         findSdk(project)
-        println findPackageName(project)
-
-        String endPath = sdkDir.toString() + File.separator + "platforms" + File.separator + "android-24" + File.separator + "android.jar";
-
-        BaseParams  baseParams = new BaseParams();
+        String envPath = sdkDir.toString() + File.separator + "platforms" + File.separator + "android-24" + File.separator + "android.jar";
 
 
-        android.registerTransform(new MyTransform(project, BaseParams))
+        BaseParams  baseParams = new BaseParams(findPackageName(project),envPath);
+
+
+        android.registerTransform(new MyTransform(project, baseParams))
 
 //        def android = project.extensions.findByType(AppExtension)
 

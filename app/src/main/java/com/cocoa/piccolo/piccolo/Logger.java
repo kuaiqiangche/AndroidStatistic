@@ -21,4 +21,12 @@ public class Logger {
         Log.e("----","--onCheckedChanged--");
     }
 
+    public static void onCreate(){
+        Log.e("----","--onCreate--");
+    }
+
+    public static void onPause(){
+        Log.e("----","--onPause--");
+    }
+
 }
