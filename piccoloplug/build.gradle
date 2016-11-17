@@ -1,0 +1,27 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+//apply from: '../bintray.gradle'
+
+dependencies {
+    compile gradleApi()//gradle sdk
+    compile localGroovy()//groovy sdk
+    compile 'com.android.tools.build:gradle:2.2.1'
+    compile 'org.javassist:javassist:3.20.0-GA'
+
+}
+
+repositories {
+    mavenCentral()
+}
+group='com.cocoa.piccolo'
+version='1.0.0'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../repo'))
+        }
+    }
+}
+
