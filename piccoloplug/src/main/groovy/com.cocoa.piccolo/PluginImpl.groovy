@@ -22,9 +22,16 @@ public class PluginImpl implements Plugin<Project> {
 
 
         BaseParams  baseParams = new BaseParams(findPackageName(project),envPath);
+        //http://tools.android.com/tech-docs/new-build-system/transform-api
+        //Starting with 1.5.0-beta1, the Gradle plugin includes a Transform API allowing 3rd party plugins to manipulate compiled class files before they are converted to dex files.
+        android.registerTransform(new ClassTransform(project, baseParams))
 
 
-        android.registerTransform(new MyTransform(project, baseParams))
+
+
+
+
+
 
 //        def android = project.extensions.findByType(AppExtension)
 
@@ -73,7 +80,7 @@ public class PluginImpl implements Plugin<Project> {
 //        ProductFlavor aa = android.defaultConfig;
 //        println aa.getApplicationId() + "---" + aa.getApplicationIdSuffix()
 //
-//        android.registerTransform(new MyTransform(project))
+//        android.registerTransform(new ClassTransform(project))
 
         //      project.task('testTask') << {
 

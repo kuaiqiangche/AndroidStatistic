@@ -21,6 +21,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         rg.setOnCheckedChangeListener(this);
         new ListView(this).setOnItemClickListener(this);
+
+
+//        tv.setAccessibilityDelegate();
+
     }
 
     @Override

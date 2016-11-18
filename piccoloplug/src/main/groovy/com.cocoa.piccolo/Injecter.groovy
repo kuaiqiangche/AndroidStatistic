@@ -4,7 +4,7 @@ import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtMethod
 
-public class Modifyer {
+public class Injecter {
 
     private static ClassPool pool = ClassPool.getDefault()
 
@@ -17,7 +17,7 @@ public class Modifyer {
     public static void injectDir(String path, ParamsExtension paramsExtension) {
         pool.appendClassPath(path)
         pool.appendClassPath("/Users/sj/Library/Android/sdk/platforms/android-24/android.jar")
-        pool.appendClassPath(paramsExtension.sdkJarPath)
+//        pool.appendClassPath(paramsExtension.sdkJarPath)
 
         viewClass = pool.getCtClass("android.view.View")
         bundleClass = pool.getCtClass("android.os.Bundle")
@@ -44,7 +44,6 @@ public class Modifyer {
                                 .replace('\\', '.').replace('/', '.')
                         CtClass c = pool.getCtClass(className)
 
-
                         println "piccolo modfiy start " + c.getName()
 
                         if (c.isFrozen()) {
@@ -55,9 +54,8 @@ public class Modifyer {
                         injectEvent(c, "onClick", paramsExtension.getOnClick())
                         injectEvent(c, "onItemClick", paramsExtension.getOnItemClick())
 
-                        injectLifeCycle(c, "onCreate", paramsExtension.getOnCreate())
-                        injectLifeCycle(c, "OnPause", paramsExtension.getOnPause())
-
+//                        injectLifeCycle(c, "onCreate", paramsExtension.getOnCreate())
+//                        injectLifeCycle(c, "OnPause", paramsExtension.getOnPause())
 
 //                        try {
 //                            CtMethod method = c.getDeclaredMethod("onClick", [viewClass] as CtClass[])
@@ -99,7 +97,7 @@ public class Modifyer {
                 method.insertBefore(methodInstanceStr);
             }
         } catch (Exception e) {
-            println "piccolo modfiy method error" + e.toString()+e.getMessage()+e.localizedMessage
+            println "piccolo injectEvent error" + e.toString()+e.getMessage()+e.localizedMessage
         }
     }
 
@@ -107,7 +105,7 @@ public class Modifyer {
      *
      * @param c
      * @param lcName  LifeCycle Name
-     * @param lcStr   LifeCycle
+     * @param lcStr   LifeCycle  inject String
      */
     public static void injectLifeCycle(CtClass c, String lcName, String lcStr) {
 
@@ -122,7 +120,7 @@ public class Modifyer {
                 method = c.getDeclaredMethod(lcName, null)
             }
         } catch (Exception e) {
-            println "piccolo modfiy method error" + e.toString()+e.getMessage()+e.localizedMessage
+            println "piccolo injectLifeCycle error" + e.toString()+e.getMessage()+e.localizedMessage
         }
     }
 

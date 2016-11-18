@@ -6,13 +6,13 @@ import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 
-public class MyTransform extends Transform {
+public class ClassTransform extends Transform {
 
 
     Project project
     BaseParams baseParams
 
-    public MyTransform(Project project, BaseParams baseParams) {
+    public ClassTransform(Project project, BaseParams baseParams) {
         this.project = project
         this.baseParams = baseParams
     }
@@ -59,7 +59,7 @@ public class MyTransform extends Transform {
 
 //                baseParams.envPath;
 
-                Modifyer.injectDir(directoryInput.file.absolutePath, params)
+                Injecter.injectDir(directoryInput.file.absolutePath, params)
 
                 def dest = outputProvider.getContentLocation(directoryInput.name,
                         directoryInput.contentTypes, directoryInput.scopes,
