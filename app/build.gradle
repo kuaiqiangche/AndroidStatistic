@@ -1,3 +1,4 @@
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.cocoa.piccolo'
 
@@ -29,11 +30,12 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-piccolo {
-    onCheckedChanged = 'com.cocoa.piccolo.piccolo.Logger.onCheckedChanged();'
-    onClick = 'com.cocoa.piccolo.piccolo.Logger.log(view);'
-    packageName = 'com/cocoa/piccolo/piccolo'
-    onCreate = 'com.cocoa.piccolo.piccolo.Logger.onCreate();'
-    onPause = 'com.cocoa.piccolo.piccolo.Logger.onPause();'
 
+piccolo {
+    onCheckedChanged = 'com.cocoa.piccolo.piccolo.Logger.onCheckedChanged(mContext);'
+    onClick = 'com.cocoa.piccolo.piccolo.Logger.loged(mContext,view);'
+    packageName = 'com/cocoa/piccolo/piccolo'
+//    onCreate = 'com.cocoa.piccolo.piccolo.Logger.onCreated();'
+//    onPause = 'com.cocoa.piccolo.piccolo.Logger.onPaused();'
+//    onStop = 'com.cocoa.piccolo.piccolo.Logger.onStoped();'
 }
