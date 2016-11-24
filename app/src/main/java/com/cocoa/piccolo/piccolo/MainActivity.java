@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RadioGroup;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rg.setOnCheckedChangeListener(this);
 //        new ListView(this).setOnItemClickListener(this);
 
-
+        Log.e("----", DeviceInfoUtils.getInfo(this).toString()+"-----");
 
     }
 

@@ -22,6 +22,8 @@
             android:process=".upload" />
 
         <activity android:name=".A"></activity>
-    </application>
 
+
+    </application>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 </manifest>
