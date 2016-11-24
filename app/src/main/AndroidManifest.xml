@@ -17,10 +17,11 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".UploadService"
-            android:process=".upload"
-            />
+        <service
+            android:name=".UploadService"
+            android:process=".upload" />
 
+        <activity android:name=".A"></activity>
     </application>
 
 </manifest>

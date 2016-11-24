@@ -1,6 +1,8 @@
 package com.cocoa.piccolo.piccolo;
 
+import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,45 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                Logger.onResumed(activity);
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                Logger.onPaused(activity);
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
+
+
 
 //        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 //            @Override

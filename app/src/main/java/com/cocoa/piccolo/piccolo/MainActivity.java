@@ -1,12 +1,11 @@
 package com.cocoa.piccolo.piccolo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -23,35 +22,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RadioGroup rg = (RadioGroup) findViewById(R.id.rg);
         tv.setOnClickListener(this);
         mContext = this;
-
-
-
         rg.setOnCheckedChangeListener(this);
-        new ListView(this).setOnItemClickListener(this);
-
-        App app = (App) getApplication();
-
-        for (int i = 0; i < 100; i++) {
-            app.list.add(i + "");
-        }
-    }
+//        new ListView(this).setOnItemClickListener(this);
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+
     }
 
     @Override
     public void onClick(View view) {
+            if(view.getId() ==R.id.tv){
+                startActivity(new Intent(this,A.class));
 
+            }
     }
 
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
 
-        Log.d("-------", "---" + i);
     }
 
     @Override
