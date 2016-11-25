@@ -12,15 +12,28 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.cocoa.piccolo.piccolo.bean.CommEvent;
+import com.cocoa.piccolo.piccolo.bean.DeviceInfo;
+import com.cocoa.piccolo.piccolo.bean.UploadCommon;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * 在此写用途
@@ -32,15 +45,14 @@ import java.util.List;
  */
 public class UploadService extends Service {
 
-    public static final int SIZE = 50;
     public static final Object o = new Object();
 
     private static final int NEW_INTENT_COMMING = 0;
     private Handler handler;
-    DatabaseHelper databaseHelper;
 
-
-
+    private File eventCacheFile;
+    private File cacheFile = null;
+    private DeviceInfo deviceInfo;
 
     private final class WorkThreadHanlder extends Handler {
         // 使用指定Looper创建Handler
@@ -53,7 +65,7 @@ public class UploadService extends Service {
             if (msg.what == NEW_INTENT_COMMING) {
                 Log.d("SingleService", Thread.currentThread().getName());
 
-                ArrayList<String> list = (ArrayList<String>) msg.obj;
+                ArrayList<Object> list = (ArrayList<Object>) msg.obj;
 
                 prepareUpload(list);
             }
@@ -65,7 +77,7 @@ public class UploadService extends Service {
         if (intent != null) {
             Object o = intent.getSerializableExtra("list");
             if (o != null) {
-                ArrayList<String> list = (ArrayList<String>) o;
+                ArrayList<CommEvent> list = (ArrayList<CommEvent>) o;
                 Message msg = handler.obtainMessage();
                 msg.obj = list;
                 msg.what = NEW_INTENT_COMMING;
@@ -75,16 +87,18 @@ public class UploadService extends Service {
         return START_STICKY;
     }
 
-    File file;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        deviceInfo = DeviceInfoUtils.getInfo(this);
+
         try {
-            File cacheFile = getCacheDir();
-            file = new File(cacheFile, "event.txt");
-            if (!file.exists()) {
-                file.createNewFile();
+            cacheFile = getCacheDir();
+            eventCacheFile = new File(cacheFile, "event_cache.txt");
+            if (!eventCacheFile.exists()) {
+                eventCacheFile.createNewFile();
             }
         } catch (Exception e) {
         }
@@ -101,13 +115,17 @@ public class UploadService extends Service {
     }
 
 
-    public void prepareUpload(List<String> list) {
+    public void prepareUpload(List<Object> list) {
+
+        if (eventCacheFile == null || !eventCacheFile.exists()) {
+            return;
+        }
 
         synchronized (o) {
-            String cachaeStr = read();
+            String cachaeStr = read(eventCacheFile);
             if (!TextUtils.isEmpty(cachaeStr)) {
                 // get cache list
-                List<String> cacheList = JSON.parseArray(cachaeStr, String.class);
+                List<Object> cacheList = JSON.parseArray(cachaeStr, Object.class);
 
                 if (cacheList != null) {
                     cacheList.addAll(list);
@@ -115,57 +133,177 @@ public class UploadService extends Service {
                     cacheList = new ArrayList<>();
                 }
 
-                if (cacheList.size() > SIZE) {
-                    List<String> uploadList = new ArrayList<>();
-                    for (int i = 0; i < SIZE; i++) {
-                        String msg = cacheList.get(0);
+                if (cacheList.size() >= Logger.BUFFER_SIZE) {
+                    List<Object> uploadList = new ArrayList<>();
+                    for (int i = 0; i < Logger.BUFFER_SIZE; i++) {
+                        Object msg = cacheList.get(0);
                         uploadList.add(msg);
                         cacheList.remove(0);
                     }
-                    // start upload
-                    Log.e("----","start upload");
+
+                    // 封装上传的数据格式 大致格式//  {content:[{点击事件1},{点击事件2},{页面进入事件1},{common: 公共信息}]}
+                    UploadCommon common = new UploadCommon();
+                    common.setCommon(deviceInfo);
+                    uploadList.add(common);
+
+                    // test
+
+                    String uploadListStr = JSON.toJSONString(uploadList);
+
+                    Log.e("uploadListStr",uploadListStr);
+
+
+                    String uploadCacheName = "event_cache" + System.currentTimeMillis();
+
+                    final File tempCacheFile = new File(cacheFile, uploadCacheName + ".txt");
+
+                    if (!tempCacheFile.exists()) {
+                        try {
+                            boolean result = tempCacheFile.createNewFile();
+                            if (result) {
+                                write(tempCacheFile,uploadListStr);
+                            }
+                        } catch (IOException e) {
+                            Log.e("--tempCacheFile--", e.toString());
+                        }
+                    }
+                    OkHttpUtils
+                            .post()
+                            .url("http://ai.kuaiqiangche.com/api/mpimport")
+                            .addParams("content", uploadListStr)
+                            .build()
+                            .execute(new Callback() {
+                                @Override
+                                public String parseNetworkResponse(Response response, int id) throws Exception {
+                                    if(response==null){
+                                        return null;
+                                    }
+                                    if (response.code() == HttpURLConnection.HTTP_OK) {
+                                        return response.body().string();
+                                    } else {
+                                        return null;
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Call call, Exception e, int id) {
+                                    Log.e("----", e.toString() + "");
+                                }
+
+                                @Override
+                                public void onResponse(Object response, int id) {
+
+                                    if(response==null){
+                                        return;
+                                    }
+                                    Log.e("----", response.toString() +tempCacheFile.toString() + "--delete");
+                                    try {
+                                        if (response != null) {
+                                            if (!TextUtils.isEmpty(response.toString())) {
+                                                JSONObject jsonObject = new JSONObject(response.toString());
+                                                int code = jsonObject.optInt("code");
+                                                if (code == 0) {
+                                                    // 删除缓存的文件
+                                                    tempCacheFile.delete();
+                                                    Log.e("----", tempCacheFile.toString() + "--delete");
+                                                }
+
+                                            }
+                                        }
+                                    } catch (JSONException e) {
+                                        Log.e("----","---delete upload cache file --"+ e.toString() );
+                                    }
+                                }
+                            });
                 }
-                write(JSON.toJSONString(cacheList));
+                write(eventCacheFile, JSON.toJSONString(cacheList));
             } else {
                 //首次缓存数据
-                write(JSON.toJSONString(list));
+                write(eventCacheFile, JSON.toJSONString(list));
             }
         }
     }
 
-    public void write(String s) {
-        Log.e("--write--",s);
+    public void write(File file, String s) {
+        Log.e("--write--", s);
+        FileWriter fileOutputStream = null;
+        BufferedWriter bufferedWriter = null;
+        PrintWriter printWriter = null;
+
         try {
-            FileWriter fileOutputStream = new FileWriter(file, false);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileOutputStream);
-            PrintWriter printWriter = new PrintWriter(bufferedWriter);
+            fileOutputStream = new FileWriter(file, false);
+            bufferedWriter = new BufferedWriter(fileOutputStream);
+            printWriter = new PrintWriter(bufferedWriter);
 
             printWriter.write(s);
             printWriter.flush();
-            printWriter.close();
+
         } catch (Exception e) {
+            Log.e("--read--", e.toString());
+        } finally {
+            try {
+                if (printWriter != null) {
+                    printWriter.close();
+                }
+            } catch (Exception e) {
+
+            }
+            try {
+                if (bufferedWriter != null) {
+                    bufferedWriter.close();
+                }
+            } catch (IOException e) {
+
+            }
+            try {
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+
+            }
         }
     }
 
-    public String read() {
+    public String read(File file) {
         StringBuffer sb = new StringBuffer();
+        FileReader fileReader = null;
+        BufferedReader bufferedReader = null;
         try {
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            fileReader = new FileReader(file);
+            bufferedReader = new BufferedReader(fileReader);
             String s = null;
             while ((s = bufferedReader.readLine()) != null) {
                 sb.append(s);
             }
+
         } catch (Exception e) {
+            Log.e("--read--", e.toString());
+        } finally {
+            try {
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            } catch (IOException e) {
+
+            }
+            try {
+                if (fileReader != null) {
+                    fileReader.close();
+                }
+            } catch (IOException e) {
+
+            }
+
         }
-        Log.e("--read--",sb.toString());
+        Log.e("--read--", sb.toString());
         return sb.toString();
     }
 
 }
 
 //    long c1 = System.currentTimeMillis();
-//for (String e : list) {
+//    for (String e : list) {
 //        Event event = new Event();
 //        event.setJsonMsg(e);
 //        long c = System.currentTimeMillis();

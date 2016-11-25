@@ -1,5 +1,7 @@
 package com.cocoa.piccolo.piccolo.bean;
 
+import java.io.Serializable;
+
 /**
  * 在此写用途
  *
@@ -9,25 +11,24 @@ package com.cocoa.piccolo.piccolo.bean;
  * @date: 16/11/24 17:06
  */
 
-public  class LifecycleEvent extends CommEvent {
+public  class LifecycleEvent extends CommEvent implements Serializable {
 
-    private String name;  // 页面的名字
-    private String lifecycle; // 页面的生命周期， onResume onPause
+    private String text;   //预留
+    private String path;   // 页面的名字
 
-
-    public String getName() {
-        return name;
+    public String getText() {
+        return text;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public String getLifecycle() {
-        return lifecycle;
+    public String getPath() {
+        return path;
     }
 
-    public void setLifecycle(String lifecycle) {
-        this.lifecycle = lifecycle;
+    public void setPath(String path) {
+        this.path = path;
     }
 }
