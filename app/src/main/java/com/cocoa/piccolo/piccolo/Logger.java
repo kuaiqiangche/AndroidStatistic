@@ -1,5 +1,6 @@
 package com.cocoa.piccolo.piccolo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -20,12 +21,12 @@ import java.util.ArrayList;
  */
 public class Logger {
 
-    public static final int BUFFER_SIZE = 3;
+    public static final int BUFFER_SIZE = 10;
 
     public static final ArrayList<Object> eventList = new ArrayList<>();
 
 
-    public static void loged(Context context, View view) {
+    public static void onClicked(Context context, View view) {
 
 //        Log.e("-----", view.getId() + "----");
 //        Log.e("-----", (view instanceof TextView) + "---instanceof TextView-");
@@ -37,62 +38,124 @@ public class Logger {
 //        }else if (view instanceof ImageView) {
 //            ImageView imageView = (ImageView) view;
 //        }
+        try {
+            ClickEvent clickEvent = new ClickEvent();
+            clickEvent.setOccurred_time();
+            clickEvent.setUser_id("USERID");
+            clickEvent.setApp_version("1.0");
+            clickEvent.setNet("WIFI");
+            clickEvent.setId(String.valueOf(view.getId()));
+            clickEvent.setImg("img");
+            clickEvent.setText("button text");
+            clickEvent.setEvent_type("click");
+            clickEvent.setIdx("idx");
+            clickEvent.setEvent_name("");
+            checkAdd(context, clickEvent);
+        } catch (Exception e) {
 
-        ClickEvent clickEvent = new ClickEvent();
-        clickEvent.setOccurred_time();
-        clickEvent.setUser_id("USERID");
-        clickEvent.setApp_version("1.0");
-        clickEvent.setNet("WIFI");
-        clickEvent.setId(String.valueOf(view.getId()));
-        clickEvent.setImg("img");
-        clickEvent.setText("button text");
-        clickEvent.setEvent_type("click");
-        clickEvent.setIdx("idx");
-        clickEvent.setEvent_name("");
-        checkAdd(context, clickEvent);
+        }
+    }
+  public static void onItemClicked(Context context, View view) {
+
+//        Log.e("-----", view.getId() + "----");
+//        Log.e("-----", (view instanceof TextView) + "---instanceof TextView-");
+//        Log.e("-----", (view instanceof View) + "---instanceof View-");
+//        Log.e("----", (context instanceof Activity) + "---instanceof Activity-");
+//        if (view instanceof TextView) {
+//            TextView textView = (TextView) view;
+//            Log.e("-----", textView.getText() + "----");
+//        }else if (view instanceof ImageView) {
+//            ImageView imageView = (ImageView) view;
+//        }
+        try {
+            ClickEvent clickEvent = new ClickEvent();
+            clickEvent.setOccurred_time();
+            clickEvent.setUser_id("USERID");
+            clickEvent.setApp_version("1.0");
+            clickEvent.setNet("WIFI");
+            clickEvent.setId(String.valueOf(view.getId()));
+            clickEvent.setImg("img");
+            clickEvent.setText("button text");
+            clickEvent.setEvent_type("itemClick");
+            clickEvent.setIdx("idx");
+            clickEvent.setEvent_name("");
+            checkAdd(context, clickEvent);
+        } catch (Exception e) {
+
+        }
     }
 
     public static void onCheckedChanged(Context context) {
-        ClickEvent clickEvent = new ClickEvent();
-        clickEvent.setOccurred_time();
-        clickEvent.setUser_id("USERID");
-        clickEvent.setApp_version("1.0");
-        clickEvent.setNet("WIFI");
-        clickEvent.setId("12312");
-        clickEvent.setImg("img");
-        clickEvent.setText("button text");
-        clickEvent.setEvent_type("checked");
-        clickEvent.setIdx("idx");
-        clickEvent.setEvent_name("");
-        checkAdd(context, clickEvent);
+        try {
+            ClickEvent clickEvent = new ClickEvent();
+            clickEvent.setOccurred_time();
+            clickEvent.setUser_id("USERID");
+            clickEvent.setApp_version("1.0");
+            clickEvent.setNet("WIFI");
+            clickEvent.setId("12312");
+            clickEvent.setImg("img");
+            clickEvent.setText("button text");
+            clickEvent.setEvent_type("checked");
+            clickEvent.setIdx("idx");
+            clickEvent.setEvent_name("");
+            checkAdd(context, clickEvent);
+        } catch (Exception e) {
+
+        }
     }
 
-    public static void onResumed(Context context) {
-        LifecycleEvent lifecycleEvent = new LifecycleEvent();
-        lifecycleEvent.setOccurred_time();
-        lifecycleEvent.setUser_id("USERID");
-        lifecycleEvent.setApp_version("1.0");
-        lifecycleEvent.setNet("WIFI");
-        lifecycleEvent.setPath("123");
-        lifecycleEvent.setEvent_type("onResumed");
-        lifecycleEvent.setText("text");
-        lifecycleEvent.setPath("path");
-        lifecycleEvent.setEvent_name("");
-        checkAdd(context, lifecycleEvent);
+    public static void onResumed(Activity context) {
+
+//        try {
+//            Class c = context.getClass();
+//            for(Field f:c.getFields()){
+//                Log.e("-=-=--",f.getName());
+//            }
+////            Field field = c.getField("mTitle");
+////            Object o = field.get(c);
+////
+////            Log.e("----", o.toString());
+//
+//        } catch (Exception e) {
+//            Log.e("----", e.toString());
+//            Log.e("----", e.toString());
+//        }
+
+        try {
+            Log.e("----", context.getTitle() + "");
+
+            LifecycleEvent lifecycleEvent = new LifecycleEvent();
+            lifecycleEvent.setOccurred_time();
+            lifecycleEvent.setUser_id("USERID");
+            lifecycleEvent.setApp_version("1.0");
+            lifecycleEvent.setNet("WIFI");
+            lifecycleEvent.setPath("123");
+            lifecycleEvent.setEvent_type("onResumed");
+            lifecycleEvent.setText("text");
+            lifecycleEvent.setPath(context.getClass().getName());
+            lifecycleEvent.setEvent_name("");
+            checkAdd(context, lifecycleEvent);
+        } catch (Exception e) {
+
+        }
     }
 
-    public static void onPaused(Context context) {
-        LifecycleEvent lifecycleEvent = new LifecycleEvent();
-        lifecycleEvent.setOccurred_time();
-        lifecycleEvent.setUser_id("USERID");
-        lifecycleEvent.setApp_version("1.0");
-        lifecycleEvent.setNet("WIFI");
-        lifecycleEvent.setPath("123");
-        lifecycleEvent.setEvent_type("onPaused");
-        lifecycleEvent.setText("text");
-        lifecycleEvent.setPath("path");
-        lifecycleEvent.setEvent_name("");
-        checkAdd(context, lifecycleEvent);
+    public static void onPaused(Activity context) {
+        try {
+            LifecycleEvent lifecycleEvent = new LifecycleEvent();
+            lifecycleEvent.setOccurred_time();
+            lifecycleEvent.setUser_id("USERID");
+            lifecycleEvent.setApp_version("1.0");
+            lifecycleEvent.setNet("WIFI");
+            lifecycleEvent.setPath("123");
+            lifecycleEvent.setEvent_type("onPaused");
+            lifecycleEvent.setText("text");
+            lifecycleEvent.setPath(context.getClass().getName());
+            lifecycleEvent.setEvent_name("");
+            checkAdd(context, lifecycleEvent);
+        } catch (Exception e) {
+
+        }
     }
 
 
@@ -102,22 +165,17 @@ public class Logger {
         Log.e("-----", eventList.size() + "------");
     }
 
-    public static synchronized void checkAdd(Context context, Object commEvent) {
+    public static synchronized void checkAdd(Context context, Object commEvent) throws Exception {
         add(context, commEvent);
+        ArrayList<Object> list = new ArrayList<>();
+        list.addAll(eventList);
+        eventList.clear();
 
-        try {
-            ArrayList<Object> list = new ArrayList<>();
-            list.addAll(eventList);
-            eventList.clear();
+        Intent intent = new Intent(context, UploadService.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("list", list);
+        context.getApplicationContext().startService(intent);
 
-            Intent intent = new Intent(context, UploadService.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("list", list);
-            context.getApplicationContext().startService(intent);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
 

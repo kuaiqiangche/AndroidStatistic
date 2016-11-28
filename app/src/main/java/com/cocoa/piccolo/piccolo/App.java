@@ -39,6 +39,7 @@ public class App extends Application {
 
             @Override
             public void onActivityResumed(Activity activity) {
+
                 Logger.onResumed(activity);
             }
 

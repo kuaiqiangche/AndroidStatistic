@@ -24,6 +24,7 @@ public class Injecter {
         viewClass = pool.getCtClass("android.view.View")
         bundleClass = pool.getCtClass("android.os.Bundle")
         radioGroupClass = pool.getCtClass("android.widget.RadioGroup")
+        adapterViewClass = pool.getCtClass("android.widget.AdapterView")
 
 
         File dir = new File(path)

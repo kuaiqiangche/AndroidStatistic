@@ -18,7 +18,6 @@ import com.cocoa.piccolo.piccolo.bean.UploadCommon;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -160,13 +159,24 @@ public class UploadService extends Service {
                     if (!tempCacheFile.exists()) {
                         try {
                             boolean result = tempCacheFile.createNewFile();
-                            if (result) {
+                            if (result) {  // create file success
                                 write(tempCacheFile,uploadListStr);
                             }
                         } catch (IOException e) {
                             Log.e("--tempCacheFile--", e.toString());
                         }
                     }
+
+
+                    Log.e("----", "start upload"+tempCacheFile.toString());
+
+
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     OkHttpUtils
                             .post()
                             .url("http://ai.kuaiqiangche.com/api/mpimport")
@@ -196,21 +206,21 @@ public class UploadService extends Service {
                                     if(response==null){
                                         return;
                                     }
-                                    Log.e("----", response.toString() +tempCacheFile.toString() + "--delete");
+                                    Log.e("----", "end upload"+response.toString() +tempCacheFile.toString() + "--delete");
                                     try {
                                         if (response != null) {
                                             if (!TextUtils.isEmpty(response.toString())) {
                                                 JSONObject jsonObject = new JSONObject(response.toString());
                                                 int code = jsonObject.optInt("code");
                                                 if (code == 0) {
-                                                    // 删除缓存的文件
+                                                    // when upload success, delete cache file
                                                     tempCacheFile.delete();
                                                     Log.e("----", tempCacheFile.toString() + "--delete");
                                                 }
 
                                             }
                                         }
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         Log.e("----","---delete upload cache file --"+ e.toString() );
                                     }
                                 }
@@ -231,7 +241,7 @@ public class UploadService extends Service {
         PrintWriter printWriter = null;
 
         try {
-            fileOutputStream = new FileWriter(file, false);
+            fileOutputStream = new FileWriter(file, false);  // not append
             bufferedWriter = new BufferedWriter(fileOutputStream);
             printWriter = new PrintWriter(bufferedWriter);
 
