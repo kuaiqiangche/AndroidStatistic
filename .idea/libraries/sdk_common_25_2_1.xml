@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="sdk-common-25.2.1">
-    <CLASSES>
-      <root url="jar://$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/sdk-common/25.2.1/sdk-common-25.2.1.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

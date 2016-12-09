@@ -1,1 +1,1 @@
-include ':app', ':piccoloplug'
+include ':app', ':plug'

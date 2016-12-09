@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.cocoa.piccolo'
+//apply plugin: 'com.cocoa.plug'
 
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
     defaultConfig {
         multiDexEnabled true
-        applicationId "com.cocoa.piccolo.piccolo"
+        applicationId "com.cocoa.piccolo.gradletest"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
@@ -35,13 +35,13 @@ dependencies {
 
 }
 
-
-piccolo {
-    onCheckedChanged = 'com.cocoa.piccolo.piccolo.Logger.onCheckedChanged(mContext);'
-    onClick = 'com.cocoa.piccolo.piccolo.Logger.onClicked(mContext,view);'
-    onItemClick = 'com.cocoa.piccolo.piccolo.Logger.onItemClicked(mContext,view);'
-    packageName = 'com/cocoa/piccolo/piccolo'
-//    onCreate = 'com.cocoa.piccolo.piccolo.Logger.onCreated();'
-//    onPause = 'com.cocoa.piccolo.piccolo.Logger.onPaused();'
-//    onStop = 'com.cocoa.piccolo.piccolo.Logger.onStoped();'
-}
+//
+//piccolo {
+//    onCheckedChanged = 'com.cocoa.piccolo.piccolo.Logger.onCheckedChanged(mContext);'
+//    onClick = 'com.cocoa.piccolo.piccolo.Logger.onClicked(mContext,view);'
+//    onItemClick = 'com.cocoa.piccolo.piccolo.Logger.onItemClicked(mContext,view);'
+//    packageName = 'com/cocoa/piccolo/piccolo'
+////    onCreate = 'com.cocoa.piccolo.piccolo.Logger.onCreated();'
+////    onPause = 'com.cocoa.piccolo.piccolo.Logger.onPaused();'
+////    onStop = 'com.cocoa.piccolo.piccolo.Logger.onStoped();'
+//}
