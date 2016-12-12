@@ -1,8 +1,6 @@
 package com.cocoa.piccolo.gradletest;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,11 +8,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, AdapterView.OnItemClickListener {
-
-
-    private Context mContext;
+public class MainActivity extends BaseActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, AdapterView.OnItemClickListener {
 
 
     private ListView listview;
@@ -25,9 +21,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         TextView tv = (TextView) findViewById(R.id.tv);
         RadioGroup rg = (RadioGroup) findViewById(R.id.rg);
-        tv.setOnClickListener(this);
+//        tv.setOnClickListener(this);
         rg.setOnCheckedChangeListener(this);
 
         img = (ImageView) findViewById(R.id.img);
@@ -44,7 +41,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         listview.setOnItemClickListener(this);
 
-
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.widget.Toast.makeText(MainActivity.this, "9999999",  android.widget.Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
-
+        Toast.makeText(this, "12312", Toast.LENGTH_LONG).show();
     }
 
     @Override

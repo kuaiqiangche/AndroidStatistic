@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.cocoa.plug'
+apply plugin: 'com.cocoa.plug'
 
 android {
     compileSdkVersion 24
@@ -34,14 +34,15 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
 }
-
+//com.cocoa.piccolo.gradletest.util
 //
-//piccolo {
-//    onCheckedChanged = 'com.cocoa.piccolo.piccolo.Logger.onCheckedChanged(mContext);'
-//    onClick = 'com.cocoa.piccolo.piccolo.Logger.onClicked(mContext,view);'
-//    onItemClick = 'com.cocoa.piccolo.piccolo.Logger.onItemClicked(mContext,view);'
-//    packageName = 'com/cocoa/piccolo/piccolo'
-////    onCreate = 'com.cocoa.piccolo.piccolo.Logger.onCreated();'
-////    onPause = 'com.cocoa.piccolo.piccolo.Logger.onPaused();'
-////    onStop = 'com.cocoa.piccolo.piccolo.Logger.onStoped();'
-//}
+
+
+piccolo {
+    onCheckedChanged = 'android.widget.Toast.makeText(mContext, "12312",  android.widget.Toast.LENGTH_LONG).show();'
+    onClick = 'android.widget.Toast.makeText(mContext, "12312",  android.widget.Toast.LENGTH_LONG).show();'
+    onItemClick = 'android.widget.Toast.makeText(mContext, "12312",  android.widget.Toast.LENGTH_LONG).show();'
+//    onCreate = 'com.cocoa.piccolo.piccolo.Logger.onCreated();'
+//    onPause = 'com.cocoa.piccolo.piccolo.Logger.onPaused();'
+//    onStop = 'com.cocoa.piccolo.piccolo.Logger.onStoped();'
+}

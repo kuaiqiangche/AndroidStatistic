@@ -119,16 +119,17 @@ public class Piccolo implements Plugin<Project>, ClassFilter {
                 try {
                     String str = file.toString().replace(parent + File.separator, "");
 
+//                    print file.toString()
+//                    print parent
+//                    print str
+                    String className = str.replace(File.separator, ".").replace(".class", "")
+                    //like this => com.cocoa.MainActyivity
 
-                    print file.toString()
-                    print parent
-                    print str
+                    CtClass c = pool.getCtClass(className)
 
-                    CtClass c = pool.getCtClass(str.replace(File.separator, ".").replace(".class", ""))
-
-                    injectEvent(c, "onCheckedChanged", params.getOnCheckedChanged())
-                    injectEvent(c, "onClick", params.getOnClick())
-                    injectEvent(c, "onItemClick", params.getOnItemClick())
+                    injectEvent(c, "onCheckedChanged", params.getOnCheckedChanged(), className, parent)
+                    injectEvent(c, "onClick", params.getOnClick(), className, parent)
+                    injectEvent(c, "onItemClick", params.getOnItemClick(), className, parent)
 
 //                    CtMethod method = c.getDeclaredMethod("onClick", [viewClass] as CtClass[])
 //                    MethodInfo methodInfo = method.getMethodInfo()
@@ -148,7 +149,6 @@ public class Piccolo implements Plugin<Project>, ClassFilter {
 //                    } else {
 //                        method.insertBefore("android.util.Log.e(\"12312\"," + paramsName + ".toString());")
 //                    }
-                    c.writeFile(parent)
                     c.detach()
 
                 } catch (Exception e) {
@@ -159,12 +159,17 @@ public class Piccolo implements Plugin<Project>, ClassFilter {
     }
 
 
-    public void injectEvent(CtClass c, String methodName, String methodInstanceStr) {
+    public void injectEvent(CtClass c, String methodName, String methodInstanceStr, String clazz, String parent) {
 
         try {
             if (methodInstanceStr == null || methodInstanceStr.length() == 0) {
                 return
             }
+
+            if(c.isFrozen()){
+                c.defrost()
+            }
+
             CtMethod method;
             if ("onClick".equals(methodName)) {
                 method = c.getDeclaredMethod("onClick", [viewClass] as CtClass[])
@@ -195,8 +200,17 @@ public class Piccolo implements Plugin<Project>, ClassFilter {
 
             }
             if (method != null) {
-                method.insertBefore(methodInstanceStr);
+                if (clazz.contains("\$")) {
+                    //内部类
+                    methodInstanceStr = methodInstanceStr.replace("mContext", "this.this\$0")
+                } else {
+                    methodInstanceStr = methodInstanceStr.replace("mContext", "this")
+                }
+                println "piccolo:methodInstanceStr ${methodInstanceStr}"
+                method.insertBefore(methodInstanceStr)
+                c.writeFile(parent)
             }
+
         } catch (Exception e) {
             println "piccolo injectEvent error" + e.toString()
         }
