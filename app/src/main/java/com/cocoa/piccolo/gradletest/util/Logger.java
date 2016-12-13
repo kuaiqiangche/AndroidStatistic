@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.RadioGroup;
 
 import com.cocoa.piccolo.gradletest.UploadService;
 import com.cocoa.piccolo.gradletest.statistical.StatisticalEvent;
@@ -76,7 +78,7 @@ public class Logger {
         }
     }
 
-    public static void onItemClicked(Context context, View view) {
+    public static void onItemClicked(Context context, AdapterView<?> adapterView, View view, int i, long l) {
 
 //        Log.e("-----", view.getId() + "----");
 //        Log.e("-----", (view instanceof TextView) + "---instanceof TextView-");
@@ -111,7 +113,7 @@ public class Logger {
         }
     }
 
-    public static void onCheckedChanged(Context context) {
+    public static void onCheckedChanged(Context context, RadioGroup radioGroup, int i) {
         try {
             StatisticalEvent clickEvent = new StatisticalEvent();
             clickEvent.setId("id");

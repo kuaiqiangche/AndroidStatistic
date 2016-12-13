@@ -23,6 +23,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_main);
 
         TextView tv = (TextView) findViewById(R.id.tv);
+        TextView tvv = (TextView) findViewById(R.id.tvv);
         RadioGroup rg = (RadioGroup) findViewById(R.id.rg);
 //        tv.setOnClickListener(this);
         rg.setOnCheckedChangeListener(this);
@@ -47,6 +48,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 android.widget.Toast.makeText(MainActivity.this, "9999999",  android.widget.Toast.LENGTH_LONG).show();
             }
         });
+
+        tvv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "tvvtvv",  android.widget.Toast.LENGTH_LONG).show();
+            }
+        });
+
+
     }
 
     @Override
@@ -58,6 +68,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         Toast.makeText(this, "12312", Toast.LENGTH_LONG).show();
+
     }
 
     @Override

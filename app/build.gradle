@@ -39,9 +39,9 @@ dependencies {
 
 
 piccolo {
-    onCheckedChanged = 'android.widget.Toast.makeText(mContext, "12312",  android.widget.Toast.LENGTH_LONG).show();'
-    onClick = 'android.widget.Toast.makeText(mContext, "12312",  android.widget.Toast.LENGTH_LONG).show();'
-    onItemClick = 'android.widget.Toast.makeText(mContext, "12312",  android.widget.Toast.LENGTH_LONG).show();'
+    onCheckedChanged = 'com.cocoa.piccolo.gradletest.util.Logger.onCheckedChanged(mContext);';
+    onClick = 'com.cocoa.piccolo.gradletest.util.Logger.onClicked(mContext);'
+    onItemClick = 'com.cocoa.piccolo.gradletest.util.Logger.onItemClicked(mContext);'
 //    onCreate = 'com.cocoa.piccolo.piccolo.Logger.onCreated();'
 //    onPause = 'com.cocoa.piccolo.piccolo.Logger.onPaused();'
 //    onStop = 'com.cocoa.piccolo.piccolo.Logger.onStoped();'

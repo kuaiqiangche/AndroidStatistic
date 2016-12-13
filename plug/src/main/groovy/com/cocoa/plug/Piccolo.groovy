@@ -165,38 +165,65 @@ public class Piccolo implements Plugin<Project>, ClassFilter {
             if (methodInstanceStr == null || methodInstanceStr.length() == 0) {
                 return
             }
-
-            if(c.isFrozen()){
+            //解冻- -
+            if (c.isFrozen()) {
                 c.defrost()
             }
 
             CtMethod method;
             if ("onClick".equals(methodName)) {
                 method = c.getDeclaredMethod("onClick", [viewClass] as CtClass[])
+
+//                if (Modifier.isStatic(method.getModifiers())) {
+//
+//                }
+
                 MethodInfo methodInfo = method.getMethodInfo()
                 CodeAttribute codeAttribute = methodInfo.getCodeAttribute()
                 LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag)
+
+                String params = "";
                 for (int i = 0; i < attr.tableLength(); i++) {
-                    println attr.variableName(i);
+                    if (i == 0) {
+                        continue
+                    }
+                    params += "," + attr.variableName(i);
                 }
+                methodInstanceStr = methodInstanceStr.replace("mContext", "mContext" + params)
+
 
             } else if ("onItemClick".equals(methodName)) {
                 method = c.getDeclaredMethod("onItemClick", [adapterViewClass, viewClass, CtClass.intType, CtClass.longType] as CtClass[])
+
                 MethodInfo methodInfo = method.getMethodInfo()
                 CodeAttribute codeAttribute = methodInfo.getCodeAttribute()
                 LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag)
+
+                String params = "";
                 for (int i = 0; i < attr.tableLength(); i++) {
-                    println attr.variableName(i);
+                    if (i == 0) {
+                        continue
+                    }
+                    params += "," + attr.variableName(i);
                 }
+                methodInstanceStr = methodInstanceStr.replace("mContext", "mContext" + params)
+
 
             } else if ("onCheckedChanged".equals(methodName)) {
                 method = c.getDeclaredMethod("onCheckedChanged", [radioGroupClass, CtClass.intType] as CtClass[])
+
                 MethodInfo methodInfo = method.getMethodInfo()
                 CodeAttribute codeAttribute = methodInfo.getCodeAttribute()
                 LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag)
+
+                String params = "";
                 for (int i = 0; i < attr.tableLength(); i++) {
-                    println attr.variableName(i);
+                    if (i == 0) {
+                        continue
+                    }
+                    params += "," + attr.variableName(i);
                 }
+                methodInstanceStr = methodInstanceStr.replace("mContext", "mContext" + params)
 
             }
             if (method != null) {
@@ -216,6 +243,16 @@ public class Piccolo implements Plugin<Project>, ClassFilter {
         }
     }
 
+
+    private void getTypeByClass(CtClass ctClass) {
+
+        String className = ctClass.getName()
+        if (className.contains("Activity") || className.contains("activity")) {
+
+        }
+
+
+    }
 
     @Override
     boolean shouldModify(String className) {
